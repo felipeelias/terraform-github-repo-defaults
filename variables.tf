@@ -148,6 +148,14 @@ variable "codeql" {
   default = {}
 }
 
+variable "dependabot_auto_merge" {
+  description = "Automatically create a workflow that auto-approves and auto-merges non-major Dependabot PRs"
+  type = object({
+    enabled = optional(bool, true)
+  })
+  default = {}
+}
+
 variable "files" {
   description = "Files to manage in the repository via commits"
   type = map(object({

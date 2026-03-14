@@ -1,3 +1,14 @@
+resource "github_repository_file" "dependabot_auto_merge" {
+  count               = var.dependabot_auto_merge.enabled ? 1 : 0
+  repository          = github_repository.this.name
+  file                = ".github/workflows/dependabot-auto-merge.yml"
+  content             = file("${path.module}/files/dependabot-auto-merge.yml")
+  commit_message      = "ci: add dependabot auto-merge workflow"
+  overwrite_on_create = true
+  commit_author       = var.commit_author
+  commit_email        = var.commit_email
+}
+
 resource "github_repository_file" "managed" {
   for_each            = var.files
   repository          = github_repository.this.name
