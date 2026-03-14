@@ -9,6 +9,17 @@ resource "github_repository_file" "security_policy" {
   commit_email        = var.commit_email
 }
 
+resource "github_repository_file" "code_of_conduct" {
+  count               = var.code_of_conduct.enabled ? 1 : 0
+  repository          = github_repository.this.name
+  file                = "CODE_OF_CONDUCT.md"
+  content             = templatefile("${path.module}/files/CODE_OF_CONDUCT.md", { full_name = github_repository.this.full_name })
+  commit_message      = "docs: add code of conduct"
+  overwrite_on_create = true
+  commit_author       = var.commit_author
+  commit_email        = var.commit_email
+}
+
 resource "github_repository_file" "dependabot_auto_merge" {
   count               = var.dependabot_auto_merge.enabled ? 1 : 0
   repository          = github_repository.this.name
