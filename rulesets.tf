@@ -1,6 +1,6 @@
 resource "github_repository_ruleset" "branch_protection" {
   count       = var.branch_protection.enabled ? 1 : 0
-  name        = "main-protection"
+  name        = var.branch_protection.name
   repository  = github_repository.this.name
   target      = "branch"
   enforcement = "active"
@@ -50,6 +50,25 @@ resource "github_repository_ruleset" "branch_protection" {
             integration_id = required_check.value.integration_id
           }
         }
+      }
+    }
+
+    dynamic "required_code_scanning" {
+      for_each = var.branch_protection.code_scanning != null ? [var.branch_protection.code_scanning] : []
+      content {
+        required_code_scanning_tool {
+          tool                      = required_code_scanning.value.tool
+          alerts_threshold          = required_code_scanning.value.alerts_threshold
+          security_alerts_threshold = required_code_scanning.value.security_alerts_threshold
+        }
+      }
+    }
+
+    dynamic "copilot_code_review" {
+      for_each = var.branch_protection.copilot_code_review != null ? [var.branch_protection.copilot_code_review] : []
+      content {
+        review_on_push             = copilot_code_review.value.review_on_push
+        review_draft_pull_requests = copilot_code_review.value.review_draft_pull_requests
       }
     }
   }

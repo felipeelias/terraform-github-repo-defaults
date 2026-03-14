@@ -67,6 +67,7 @@ variable "branch_protection" {
   description = "Branch protection ruleset configuration"
   type = object({
     enabled                = optional(bool, true)
+    name                   = optional(string, "main-protection")
     branch_pattern         = optional(string, "refs/heads/main")
     require_linear_history = optional(bool, true)
     require_signatures     = optional(bool, true)
@@ -81,6 +82,15 @@ variable "branch_protection" {
       require_code_owner_review         = optional(bool, false)
       require_last_push_approval        = optional(bool, false)
       required_review_thread_resolution = optional(bool, false)
+    }))
+    code_scanning = optional(object({
+      tool                      = optional(string, "CodeQL")
+      alerts_threshold          = optional(string, "errors")
+      security_alerts_threshold = optional(string, "high_or_higher")
+    }))
+    copilot_code_review = optional(object({
+      review_on_push             = optional(bool, false)
+      review_draft_pull_requests = optional(bool, false)
     }))
     bypass_actors = optional(list(object({
       actor_id    = number
