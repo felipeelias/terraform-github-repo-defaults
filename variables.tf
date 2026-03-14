@@ -78,12 +78,13 @@ variable "branch_protection" {
     })), [])
     strict_status_checks = optional(bool, true)
     pull_request = optional(object({
-      required_approving_review_count   = optional(number, 0)
+      required_approving_review_count   = optional(number, 1)
       dismiss_stale_reviews_on_push     = optional(bool, true)
       require_code_owner_review         = optional(bool, false)
       require_last_push_approval        = optional(bool, false)
       required_review_thread_resolution = optional(bool, false)
-    }))
+      allowed_merge_methods             = optional(list(string), ["squash"])
+    }), {})
     code_scanning = optional(object({
       tool                      = optional(string, "CodeQL")
       alerts_threshold          = optional(string, "errors")
