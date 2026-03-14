@@ -5,10 +5,11 @@ resource "github_repository" "this" {
   topics       = var.topics
   visibility   = var.visibility
 
-  has_issues      = var.features.has_issues
-  has_wiki        = var.features.has_wiki
-  has_projects    = var.features.has_projects
-  has_discussions = var.features.has_discussions
+  has_issues                  = var.features.has_issues
+  has_wiki                    = var.features.has_wiki
+  has_projects                = var.features.has_projects
+  has_discussions             = var.features.has_discussions
+  web_commit_signoff_required = var.features.web_commit_signoff_required
 
   allow_squash_merge          = var.merge_strategy.allow_squash_merge
   allow_merge_commit          = var.merge_strategy.allow_merge_commit

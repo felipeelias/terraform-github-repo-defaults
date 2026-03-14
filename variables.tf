@@ -30,10 +30,11 @@ variable "visibility" {
 variable "features" {
   description = "Repository feature toggles"
   type = object({
-    has_issues      = optional(bool, true)
-    has_wiki        = optional(bool, false)
-    has_projects    = optional(bool, false)
-    has_discussions = optional(bool, false)
+    has_issues                  = optional(bool, true)
+    has_wiki                    = optional(bool, false)
+    has_projects                = optional(bool, false)
+    has_discussions             = optional(bool, false)
+    web_commit_signoff_required = optional(bool, false)
   })
   default = {}
 }
