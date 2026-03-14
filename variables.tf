@@ -89,11 +89,11 @@ variable "branch_protection" {
       tool                      = optional(string, "CodeQL")
       alerts_threshold          = optional(string, "errors")
       security_alerts_threshold = optional(string, "high_or_higher")
-    }))
+    }), {})
     copilot_code_review = optional(object({
       review_on_push             = optional(bool, false)
       review_draft_pull_requests = optional(bool, false)
-    }))
+    }), {})
     bypass_actors = optional(list(object({
       actor_id    = number
       actor_type  = string
