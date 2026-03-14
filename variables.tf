@@ -68,8 +68,8 @@ variable "branch_protection" {
   description = "Branch protection ruleset configuration"
   type = object({
     enabled                = optional(bool, true)
-    name                   = optional(string, "main-protection")
-    branch_pattern         = optional(string, "refs/heads/main")
+    name                   = optional(string, "protect-default")
+    branch_pattern         = optional(string, "~DEFAULT_BRANCH")
     require_linear_history = optional(bool, true)
     require_signatures     = optional(bool, true)
     required_status_checks = optional(list(object({
