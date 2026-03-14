@@ -34,7 +34,7 @@ variable "features" {
     has_wiki                    = optional(bool, false)
     has_projects                = optional(bool, false)
     has_discussions             = optional(bool, false)
-    web_commit_signoff_required = optional(bool, false)
+    web_commit_signoff_required = optional(bool, true)
   })
   default = {}
 }
@@ -132,7 +132,7 @@ variable "workflow_permissions" {
   description = "GitHub Actions workflow token permissions"
   type = object({
     default_workflow_permissions     = optional(string, "read")
-    can_approve_pull_request_reviews = optional(bool, false)
+    can_approve_pull_request_reviews = optional(bool, true)
   })
   default = {}
 }
