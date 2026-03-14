@@ -148,6 +148,19 @@ variable "codeql" {
   default = {}
 }
 
+variable "pages" {
+  description = "GitHub Pages configuration"
+  type = object({
+    build_type = optional(string, "legacy")
+    cname      = optional(string)
+    source = optional(object({
+      branch = string
+      path   = optional(string, "/")
+    }), { branch = "main" })
+  })
+  default = null
+}
+
 variable "security_policy" {
   description = "Add a SECURITY.md that directs reporters to GitHub Security Advisories"
   type = object({
