@@ -1,3 +1,14 @@
+resource "github_repository_file" "security_policy" {
+  count               = var.security_policy.enabled ? 1 : 0
+  repository          = github_repository.this.name
+  file                = "SECURITY.md"
+  content             = templatefile("${path.module}/files/SECURITY.md", { full_name = github_repository.this.full_name })
+  commit_message      = "docs: add security policy"
+  overwrite_on_create = true
+  commit_author       = var.commit_author
+  commit_email        = var.commit_email
+}
+
 resource "github_repository_file" "dependabot_auto_merge" {
   count               = var.dependabot_auto_merge.enabled ? 1 : 0
   repository          = github_repository.this.name
