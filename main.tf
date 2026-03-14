@@ -33,6 +33,18 @@ resource "github_repository" "this" {
 
   archive_on_destroy = true
 
+  dynamic "pages" {
+    for_each = var.pages != null ? [var.pages] : []
+    content {
+      build_type = pages.value.build_type
+      cname      = pages.value.cname
+      source {
+        branch = pages.value.source.branch
+        path   = pages.value.source.path
+      }
+    }
+  }
+
   lifecycle {
     prevent_destroy = true
   }
