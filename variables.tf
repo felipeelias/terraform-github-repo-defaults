@@ -124,6 +124,7 @@ variable "actions" {
     github_owned_allowed = optional(bool, true)
     verified_allowed     = optional(bool, true)
     patterns_allowed     = optional(list(string), [])
+    sha_pinning_required = optional(bool, true)
   })
   default = {}
 }
