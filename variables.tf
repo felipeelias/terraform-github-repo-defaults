@@ -45,7 +45,7 @@ variable "merge_strategy" {
     allow_squash_merge          = optional(bool, true)
     allow_merge_commit          = optional(bool, false)
     allow_rebase_merge          = optional(bool, false)
-    allow_auto_merge            = optional(bool, false)
+    allow_auto_merge            = optional(bool, true)
     delete_branch_on_merge      = optional(bool, true)
     squash_merge_commit_title   = optional(string, "COMMIT_OR_PR_TITLE")
     squash_merge_commit_message = optional(string, "COMMIT_MESSAGES")
