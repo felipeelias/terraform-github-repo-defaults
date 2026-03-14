@@ -156,6 +156,14 @@ variable "security_policy" {
   default = {}
 }
 
+variable "code_of_conduct" {
+  description = "Add a CODE_OF_CONDUCT.md (Contributor Covenant 3.0)"
+  type = object({
+    enabled = optional(bool, true)
+  })
+  default = {}
+}
+
 variable "dependabot_auto_merge" {
   description = "Automatically create a workflow that auto-approves and auto-merges non-major Dependabot PRs"
   type = object({
