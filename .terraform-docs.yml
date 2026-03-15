@@ -15,35 +15,82 @@ content: |-
 
   ## Usage
 
+  Define your repositories in a local map and pass them to the module with `for_each`:
+
   ```hcl
-  module "my_repo" {
-    source = "github.com/felipeelias/terraform-github-repo-defaults?ref=v0.4.1"
+  locals {
+    repos = {
+      # Minimal — just apply secure defaults
+      "my-library" = {
+        description = "A reusable library"
+        topics      = ["go", "library"]
+      }
 
-    name        = "my-repo"
-    description = "My repository"
-    topics      = ["example"]
+      # With CI status checks and custom actions
+      "my-app" = {
+        description = "My application"
+        topics      = ["go", "docker"]
 
-    actions = {
-      patterns_allowed = [
-        "DavidAnson/markdownlint-cli2-action@*",
-      ]
+        actions = {
+          patterns_allowed = [
+            "golangci/golangci-lint-action@*",
+            "goreleaser/goreleaser-action@*",
+            "dependabot/fetch-metadata@*",
+          ]
+        }
+
+        branch_protection = {
+          required_status_checks = [
+            { context = "test" },
+            { context = "lint" },
+          ]
+        }
+      }
+
+      # With feature overrides
+      "my-site" = {
+        description  = "My website"
+        homepage_url = "https://example.com"
+
+        features = {
+          has_issues     = false
+          has_discussions = true
+        }
+
+        pages = {
+          build_type = "workflow"
+        }
+      }
     }
+  }
 
-    branch_protection = {
-      required_status_checks = [
-        { context = "test" },
-        { context = "lint" },
-      ]
-    }
+  module "repos" {
+    source   = "github.com/felipeelias/terraform-github-repo-defaults?ref=v0.5.0"
+    for_each = local.repos
+
+    name         = each.key
+    description  = try(each.value.description, null)
+    homepage_url = try(each.value.homepage_url, null)
+    topics       = try(each.value.topics, [])
+
+    features          = try(each.value.features, {})
+    pages             = try(each.value.pages, null)
+    actions           = try(each.value.actions, {})
+    branch_protection = try(each.value.branch_protection, {})
   }
   ```
 
-  ### Importing an existing repository
+  ### Importing existing repositories
 
   ```hcl
   import {
-    to = module.my_repo.github_repository.this
-    id = "my-repo"
+    to = module.repos["my-library"].github_repository.this
+    id = "my-library"
+  }
+
+  import {
+    to = module.repos["my-app"].github_repository.this
+    id = "my-app"
   }
   ```
 
