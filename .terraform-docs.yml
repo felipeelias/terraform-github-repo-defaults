@@ -1,0 +1,157 @@
+formatter: markdown table
+
+sections:
+  show:
+    - header
+    - requirements
+    - providers
+    - inputs
+    - outputs
+
+header-from: docs/header.md
+
+content: |-
+  {{ .Header }}
+
+  ## Usage
+
+  ```hcl
+  module "my_repo" {
+    source = "github.com/felipeelias/terraform-github-repo-defaults?ref=v0.4.1"
+
+    name        = "my-repo"
+    description = "My repository"
+    topics      = ["example"]
+
+    actions = {
+      patterns_allowed = [
+        "DavidAnson/markdownlint-cli2-action@*",
+      ]
+    }
+
+    branch_protection = {
+      required_status_checks = [
+        { context = "test" },
+        { context = "lint" },
+      ]
+    }
+  }
+  ```
+
+  ### Importing an existing repository
+
+  ```hcl
+  import {
+    to = module.my_repo.github_repository.this
+    id = "my-repo"
+  }
+  ```
+
+  ## What this module manages
+
+  For each repository, this module configures:
+
+  - **Repository settings** — squash-only merges, auto-merge, delete branch on merge, wiki/projects off
+  - **Security** — secret scanning, push protection, Dependabot security updates, vulnerability alerts
+  - **Branch protection** — ruleset on default branch requiring PRs, signed commits, linear history
+  - **Tag protection** — ruleset protecting `v*` tags
+  - **Actions** — selected actions only (GitHub-owned + verified + explicit allowlist), SHA pinning, read-only workflow token
+  - **CodeQL** — optional, via `gh` CLI workaround (no native Terraform resource)
+  - **Community health files** — `SECURITY.md`, `CODE_OF_CONDUCT.md` (Contributor Covenant 3.0), Dependabot auto-merge workflow
+
+  ## Defaults
+
+  All defaults are designed to harden repositories for open source contributions while keeping them secure. Override any setting by passing the corresponding variable.
+
+  ### Repository settings
+
+  | Setting | Default | Why |
+  |---------|---------|-----|
+  | `has_issues` | `true` | Primary channel for bug reports and feature requests |
+  | `has_wiki` | `false` | Wikis are hard to maintain and often become stale; prefer docs in the repo |
+  | `has_projects` | `false` | Not needed for most open source projects |
+  | `has_discussions` | `false` | Issues are usually sufficient; enable per-repo if needed |
+  | `web_commit_signoff_required` | `true` | Ensures contributors agree to DCO when editing via GitHub web UI |
+  | `allow_squash_merge` | `true` | Keeps history clean with one commit per PR |
+  | `allow_merge_commit` | `false` | Prevents noisy merge commits that clutter history |
+  | `allow_rebase_merge` | `false` | Avoids rewriting SHAs which breaks signature verification |
+  | `allow_auto_merge` | `true` | Lets maintainers approve and walk away; merges when CI passes |
+  | `allow_update_branch` | `true` | Contributors can update their PR branch from the GitHub UI |
+  | `delete_branch_on_merge` | `true` | Prevents stale branches from accumulating |
+  | `squash_merge_commit_title` | `PR_TITLE` | Produces readable `git log` entries from PR titles |
+  | `squash_merge_commit_message` | `BLANK` | Avoids dumping all PR commit messages into the squash commit body |
+
+  ### Security
+
+  | Setting | Default | Why |
+  |---------|---------|-----|
+  | `vulnerability_alerts` | `true` | Get notified about known vulnerabilities in dependencies |
+  | `secret_scanning` | `true` | Detects accidentally committed secrets (API keys, tokens) |
+  | `secret_scanning_push_protection` | `true` | Blocks pushes before secrets reach the remote |
+  | `dependabot_security_updates` | `true` | Automates PRs to patch vulnerable dependencies |
+
+  ### Branch protection (ruleset on default branch)
+
+  | Setting | Default | Why |
+  |---------|---------|-----|
+  | `require_linear_history` | `true` | Makes `git bisect` and reverts reliable |
+  | `require_signatures` | `true` | Verifies commit authorship; prevents impersonation |
+  | `required_approving_review_count` | `1` | At least one review before merging |
+  | `dismiss_stale_reviews_on_push` | `true` | Forces re-review when code changes after approval |
+  | `allowed_merge_methods` | `["squash"]` | Enforces the squash-only merge strategy at the ruleset level |
+  | `strict_status_checks` | `true` | PRs must be up to date with the base branch before merging |
+  | `bypass_actors` | Repository admin | Only admins can push directly or bypass the ruleset |
+
+  ### Tag protection (ruleset on `v*` tags)
+
+  | Setting | Default | Why |
+  |---------|---------|-----|
+  | `enabled` | `true` | Prevents release tags from being deleted or overwritten |
+  | `tag_pattern` | `refs/tags/v*` | Covers semver release tags (`v1.0.0`, `v2.3.1`, etc.) |
+
+  ### Actions
+
+  | Setting | Default | Why |
+  |---------|---------|-----|
+  | `allowed_actions` | `selected` | Only explicitly permitted actions can run; reduces supply chain risk |
+  | `github_owned_allowed` | `true` | GitHub-maintained actions (`actions/*`) are trusted |
+  | `verified_allowed` | `true` | Marketplace-verified publishers are allowed |
+  | `sha_pinning_required` | `true` | Prevents tag-swapping attacks on third-party actions |
+  | `default_workflow_permissions` | `read` | Least-privilege; workflows must explicitly request write permissions |
+  | `can_approve_pull_request_reviews` | `true` | Allows automated workflows (e.g., Dependabot auto-merge) to approve PRs |
+
+  ### Community health files
+
+  | File | Default | Why |
+  |------|---------|-----|
+  | `SECURITY.md` | enabled | Gives reporters a clear path to disclose vulnerabilities via GitHub Security Advisories |
+  | `CODE_OF_CONDUCT.md` | enabled | Sets expectations for contributor behavior (Contributor Covenant 3.0) |
+  | Dependabot auto-merge | enabled | Reduces maintenance burden by auto-merging non-major dependency updates |
+
+  ## Prerequisites
+
+  - A GitHub [fine-grained personal access token](https://github.com/settings/tokens?type=beta) with admin permissions on target repositories
+  - The [`gh` CLI](https://cli.github.com/) authenticated (used by CodeQL and SHA pinning workarounds)
+  - Repositories must already exist on GitHub — this module imports and manages them, it does not create them
+
+  ## Known issues
+
+  - **Unverified commits**: Files managed via `github_repository_file` (SECURITY.md, CODE_OF_CONDUCT.md, etc.) produce unsigned commits. This is a GitHub Contents API limitation.
+  - **SHA pinning**: The `sha_pinning_required` attribute on `github_actions_repository_permissions` is not applied by the provider ([v6.11.x](https://github.com/integrations/terraform-provider-github)). A `terraform_data` + `gh api` workaround is included.
+  - **Composite actions**: GitHub Actions SHA pinning only applies to direct `uses:` references. Composite actions with internal unpinned dependencies (e.g., `actions/upload-pages-artifact` calling `actions/upload-artifact@v4`) will fail — set `sha_pinning_required = false` for affected repos.
+
+  {{ .Requirements }}
+
+  {{ .Providers }}
+
+  {{ .Inputs }}
+
+  {{ .Outputs }}
+
+output:
+  file: README.md
+  mode: replace
+
+sort:
+  enabled: true
+  by: required
