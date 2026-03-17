@@ -55,7 +55,7 @@ locals {
 }
 
 module "repos" {
-  source   = "github.com/felipeelias/terraform-github-repo-defaults?ref=v0.5.0"
+  source   = "github.com/felipeelias/terraform-github-repo-defaults?ref=v0.6.0"
   for_each = local.repos
 
   name         = each.key
@@ -93,7 +93,7 @@ For each repository, this module configures:
 - **Branch protection** — ruleset on default branch requiring PRs, signed commits, linear history
 - **Tag protection** — ruleset protecting `v*` tags
 - **Actions** — selected actions only (GitHub-owned + verified + explicit allowlist), SHA pinning, read-only workflow token
-- **CodeQL** — optional, via `gh` CLI workaround (no native Terraform resource)
+- **CodeQL** — enabled by default, via `gh` CLI workaround (no native Terraform resource)
 - **Community health files** — `SECURITY.md`, `CODE_OF_CONDUCT.md` (Contributor Covenant 3.0), Dependabot auto-merge workflow
 
 ## Defaults
