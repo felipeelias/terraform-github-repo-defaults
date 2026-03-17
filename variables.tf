@@ -142,7 +142,7 @@ variable "workflow_permissions" {
 variable "codeql" {
   description = "CodeQL default setup configuration (uses gh CLI, no native TF resource)"
   type = object({
-    enabled     = optional(bool, false)
+    enabled     = optional(bool, true)
     query_suite = optional(string, "default")
   })
   default = {}
