@@ -127,8 +127,8 @@ content: |-
   | `delete_branch_on_merge` | `true` | Prevents stale branches from accumulating |
   | `squash_merge_commit_title` | `PR_TITLE` | Produces readable `git log` entries from PR titles |
   | `squash_merge_commit_message` | `BLANK` | Avoids dumping all PR commit messages into the squash commit body |
-  | `merge_commit_title` | `PR_TITLE` | Default merge commit title; set explicitly to prevent perpetual plan diffs |
-  | `merge_commit_message` | `PR_BODY` | Default merge commit message; set explicitly to prevent perpetual plan diffs |
+  | `merge_commit_title` | `MERGE_MESSAGE` | Matches GitHub's API default; set explicitly to prevent perpetual plan diffs |
+  | `merge_commit_message` | `PR_TITLE` | Matches GitHub's API default; set explicitly to prevent perpetual plan diffs |
 
   ### Security
 
