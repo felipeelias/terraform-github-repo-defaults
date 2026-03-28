@@ -40,9 +40,12 @@ resource "github_repository" "this" {
     content {
       build_type = pages.value.build_type
       cname      = pages.value.cname
-      source {
-        branch = pages.value.source.branch
-        path   = pages.value.source.path
+      dynamic "source" {
+        for_each = pages.value.build_type != "workflow" ? [pages.value.source] : []
+        content {
+          branch = source.value.branch
+          path   = source.value.path
+        }
       }
     }
   }
