@@ -50,6 +50,8 @@ variable "merge_strategy" {
     delete_branch_on_merge      = optional(bool, true)
     squash_merge_commit_title   = optional(string, "PR_TITLE")
     squash_merge_commit_message = optional(string, "BLANK")
+    merge_commit_title          = optional(string, "PR_TITLE")
+    merge_commit_message        = optional(string, "PR_BODY")
   })
   default = {}
 }

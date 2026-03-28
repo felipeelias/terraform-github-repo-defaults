@@ -19,6 +19,8 @@ resource "github_repository" "this" {
   delete_branch_on_merge      = var.merge_strategy.delete_branch_on_merge
   squash_merge_commit_title   = var.merge_strategy.squash_merge_commit_title
   squash_merge_commit_message = var.merge_strategy.squash_merge_commit_message
+  merge_commit_title          = var.merge_strategy.merge_commit_title
+  merge_commit_message        = var.merge_strategy.merge_commit_message
 
   vulnerability_alerts = var.security.vulnerability_alerts
 
