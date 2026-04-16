@@ -182,21 +182,21 @@ All defaults are designed to harden repositories for open source contributions w
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.14 |
 | <a name="requirement_github"></a> [github](#requirement\_github) | ~> 6.11 |
 
 ## Providers
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="provider_github"></a> [github](#provider\_github) | 6.11.1 |
 | <a name="provider_terraform"></a> [terraform](#provider\_terraform) | n/a |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_name"></a> [name](#input\_name) | Repository name (must already exist on GitHub) | `string` | n/a | yes |
 | <a name="input_actions"></a> [actions](#input\_actions) | GitHub Actions configuration | <pre>object({<br/>    enabled              = optional(bool, true)<br/>    allowed_actions      = optional(string, "selected")<br/>    github_owned_allowed = optional(bool, true)<br/>    verified_allowed     = optional(bool, true)<br/>    patterns_allowed     = optional(list(string), [])<br/>    sha_pinning_required = optional(bool, true)<br/>  })</pre> | `{}` | no |
 | <a name="input_branch_protection"></a> [branch\_protection](#input\_branch\_protection) | Branch protection ruleset configuration | <pre>object({<br/>    enabled                = optional(bool, true)<br/>    name                   = optional(string, "protect-default")<br/>    branch_pattern         = optional(string, "~DEFAULT_BRANCH")<br/>    require_linear_history = optional(bool, true)<br/>    require_signatures     = optional(bool, true)<br/>    required_status_checks = optional(list(object({<br/>      context        = string<br/>      integration_id = optional(number)<br/>    })), [])<br/>    strict_status_checks = optional(bool, true)<br/>    pull_request = optional(object({<br/>      required_approving_review_count   = optional(number, 1)<br/>      dismiss_stale_reviews_on_push     = optional(bool, true)<br/>      require_code_owner_review         = optional(bool, false)<br/>      require_last_push_approval        = optional(bool, false)<br/>      required_review_thread_resolution = optional(bool, false)<br/>      allowed_merge_methods             = optional(list(string), ["squash"])<br/>    }), {})<br/>    code_scanning = optional(object({<br/>      tool                      = optional(string, "CodeQL")<br/>      alerts_threshold          = optional(string, "errors")<br/>      security_alerts_threshold = optional(string, "high_or_higher")<br/>    }), {})<br/>    copilot_code_review = optional(object({<br/>      review_on_push             = optional(bool, false)<br/>      review_draft_pull_requests = optional(bool, false)<br/>    }), {})<br/>    bypass_actors = optional(list(object({<br/>      actor_id    = number<br/>      actor_type  = string<br/>      bypass_mode = optional(string, "always")<br/>      })), [{<br/>      actor_id    = 5<br/>      actor_type  = "RepositoryRole"<br/>      bypass_mode = "always"<br/>    }])<br/>  })</pre> | `{}` | no |
@@ -206,7 +206,7 @@ All defaults are designed to harden repositories for open source contributions w
 | <a name="input_commit_email"></a> [commit\_email](#input\_commit\_email) | Author email for Terraform-managed file commits | `string` | `""` | no |
 | <a name="input_dependabot_auto_merge"></a> [dependabot\_auto\_merge](#input\_dependabot\_auto\_merge) | Automatically create a workflow that auto-approves and auto-merges non-major Dependabot PRs | <pre>object({<br/>    enabled = optional(bool, true)<br/>  })</pre> | `{}` | no |
 | <a name="input_description"></a> [description](#input\_description) | Repository description | `string` | `null` | no |
-| <a name="input_features"></a> [features](#input\_features) | Repository feature toggles | <pre>object({<br/>    has_issues                  = optional(bool, true)<br/>    has_wiki                    = optional(bool, false)<br/>    has_projects                = optional(bool, false)<br/>    has_discussions             = optional(bool, false)<br/>    web_commit_signoff_required = optional(bool, true)<br/>  })</pre> | `{}` | no |
+| <a name="input_features"></a> [features](#input\_features) | Repository feature toggles | <pre>object({<br/>    has_issues                  = optional(bool, true)<br/>    has_wiki                    = optional(bool, false)<br/>    has_projects                = optional(bool, false)<br/>    has_discussions             = optional(bool, false)<br/>    web_commit_signoff_required = optional(bool, false)<br/>  })</pre> | `{}` | no |
 | <a name="input_files"></a> [files](#input\_files) | Files to manage in the repository via commits | <pre>map(object({<br/>    content             = string<br/>    commit_message      = optional(string)<br/>    branch              = optional(string)<br/>    overwrite_on_create = optional(bool, true)<br/>  }))</pre> | `{}` | no |
 | <a name="input_homepage_url"></a> [homepage\_url](#input\_homepage\_url) | Repository homepage URL | `string` | `null` | no |
 | <a name="input_merge_strategy"></a> [merge\_strategy](#input\_merge\_strategy) | Merge strategy configuration | <pre>object({<br/>    allow_squash_merge          = optional(bool, true)<br/>    allow_merge_commit          = optional(bool, false)<br/>    allow_rebase_merge          = optional(bool, false)<br/>    allow_auto_merge            = optional(bool, true)<br/>    allow_update_branch         = optional(bool, true)<br/>    delete_branch_on_merge      = optional(bool, true)<br/>    squash_merge_commit_title   = optional(string, "PR_TITLE")<br/>    squash_merge_commit_message = optional(string, "BLANK")<br/>    merge_commit_title          = optional(string, "MERGE_MESSAGE")<br/>    merge_commit_message        = optional(string, "PR_TITLE")<br/>  })</pre> | `{}` | no |
@@ -221,7 +221,7 @@ All defaults are designed to harden repositories for open source contributions w
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_branch_ruleset_id"></a> [branch\_ruleset\_id](#output\_branch\_ruleset\_id) | Branch protection ruleset ID |
 | <a name="output_repository"></a> [repository](#output\_repository) | Repository metadata |
 | <a name="output_tag_ruleset_id"></a> [tag\_ruleset\_id](#output\_tag\_ruleset\_id) | Tag protection ruleset ID |

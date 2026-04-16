@@ -34,7 +34,7 @@ variable "features" {
     has_wiki                    = optional(bool, false)
     has_projects                = optional(bool, false)
     has_discussions             = optional(bool, false)
-    web_commit_signoff_required = optional(bool, true)
+    web_commit_signoff_required = optional(bool, false)
   })
   default = {}
 }
